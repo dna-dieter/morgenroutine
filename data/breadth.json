@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-04-02T06:00:00Z",
+  "indicators": [
+    { "name": "Aktien über 200-MA", "value": 48 },
+    { "name": "Aktien über 50-MA", "value": 39 },
+    { "name": "Neue Hochs vs Tiefs", "value": 32 },
+    { "name": "Advance/Decline", "value": 55 },
+    { "name": "Up-Volume %", "value": 61 }
+  ]
+}
