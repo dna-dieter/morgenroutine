@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-04-02T06:00:00Z",
+  "events": [
+    { "date": "2026-04-02", "title": "ISM Manufacturing PMI", "type": "data" },
+    { "date": "2026-04-03", "title": "Initial Jobless Claims", "type": "data" },
+    { "date": "2026-04-03", "title": "MU (Micron) Earnings After Close", "type": "earnings" },
+    { "date": "2026-04-04", "title": "Non-Farm Payrolls", "type": "data" },
+    { "date": "2026-04-06", "title": "Fed-Protokoll (FOMC Minutes)", "type": "fed" }
+  ]
+}
