@@ -1,0 +1,28 @@
+# Mantelroutine — Job Schedule: Donnerstag
+
+[mantel]
+wochentag = "donnerstag"
+timeout_job_sec = 600
+retry_max = 2
+retry_pause_sec = 30
+
+[[jobs]]
+name = "sec_delta_update"
+beschreibung = "SEC EDGAR Delta-Update: neue Filings laden"
+enabled = true
+modul = "collect_sec_status"
+abhaengig_von = ""
+
+[[jobs]]
+name = "aktien_delta_update"
+beschreibung = "Tagesaktuelle Kursdaten laden (yfinance)"
+enabled = true
+modul = "collect_market_data"
+abhaengig_von = ""
+
+[[jobs]]
+name = "aktien_kalkulation"
+beschreibung = "Berechnungen: Ampel, Breadth, Screening"
+enabled = true
+modul = "calculate_ampel"
+abhaengig_von = "aktien_delta_update"
