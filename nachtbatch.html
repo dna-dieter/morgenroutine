@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nacht-Batch Statistik — Morgenroutine</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-card: #161b22;
+            --bg-card-hover: #1c2333;
+            --border: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent-green: #3fb950;
+            --accent-red: #f85149;
+            --accent-yellow: #d29922;
+            --accent-blue: #58a6ff;
+            --accent-purple: #bc8cff;
+            --accent-orange: #f0883e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .back-link { color: var(--accent-blue); text-decoration: none; font-size: 0.85rem; display: inline-block; margin-bottom: 16px; }
+        .back-link:hover { text-decoration: underline; }
+
+        h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 8px; }
+        h1 span { color: var(--accent-blue); }
+
+        .subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px; }
+
+        .overall-status { display: flex; align-items: center; gap: 16px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 24px; }
+        .status-dot { width: 28px; height: 28px; border-radius: 50%; }
+        .status-dot.success { background: var(--accent-green); box-shadow: 0 0 16px rgba(63, 185, 80, 0.5); }
+        .status-dot.error { background: var(--accent-red); box-shadow: 0 0 16px rgba(248, 81, 73, 0.5); }
+        .status-dot.partial { background: var(--accent-yellow); box-shadow: 0 0 16px rgba(210, 153, 34, 0.5); }
+        .status-text { font-size: 1.2rem; font-weight: 600; }
+        .status-time { color: var(--text-muted); font-size: 0.85rem; margin-left: auto; }
+
+        .job-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+        .job-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .job-name { font-size: 1rem; font-weight: 600; }
+        .job-meta { display: flex; gap: 16px; font-size: 0.8rem; color: var(--text-muted); }
+        .job-badge { font-size: 0.75rem; padding: 2px 10px; border-radius: 12px; font-weight: 600; }
+        .job-badge.success { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
+        .job-badge.error { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
+        .job-summary { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 10px; }
+        .job-details { list-style: none; padding: 0; }
+        .job-details li { font-size: 0.85rem; color: var(--text-secondary); padding: 4px 0; padding-left: 16px; position: relative; }
+        .job-details li::before { content: '\00b7'; position: absolute; left: 4px; color: var(--accent-green); font-weight: bold; }
+
+        .section-title { font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin: 24px 0 12px; }
+        .pending-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-secondary); }
+        .pending-icon { color: var(--accent-yellow); }
+
+        .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-top: 12px; }
+        .history-day { text-align: center; padding: 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; }
+        .history-day .h-date { font-size: 0.8rem; color: var(--text-muted); }
+        .history-day .h-status { font-size: 1.2rem; margin: 4px 0; }
+        .history-day .h-detail { font-size: 0.7rem; color: var(--text-secondary); }
+
+        .concept-box { background: var(--bg-card); border: 1px solid var(--accent-blue); border-radius: 8px; padding: 16px; margin-top: 24px; }
+        .concept-box h3 { color: var(--accent-blue); font-size: 0.95rem; margin-bottom: 8px; }
+        .concept-box p { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 8px; }
+        .concept-code { background: var(--bg-primary); border-radius: 6px; padding: 12px; font-family: 'SF Mono', monospace; font-size: 0.8rem; color: var(--text-secondary); overflow-x: auto; white-space: pre; }
+
+        .footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.75rem; text-align: center; }
+        .footer a { color: var(--accent-blue); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">&larr; Zur&uuml;ck zum Dashboard</a>
+    <h1>Statistik der <span>Nachtroutinen</span></h1>
+    <div class="subtitle">&Uuml;bersicht aller Nacht-Batch Jobs &mdash; automatisch aktualisiert vom Nacht-Batch um 03:00 und 04:00 Uhr</div>
+
+    <div class="overall-status" id="overall-status">
+        <span class="status-dot" id="overall-dot"></span>
+        <span class="status-text" id="overall-text">Lade...</span>
+        <span class="status-time" id="overall-time"></span>
+    </div>
+
+    <div id="jobs-container"></div>
+
+    <div class="section-title">Offene Aktionen</div>
+    <div id="pending-container"></div>
+
+    <div class="section-title">Letzte Tage</div>
+    <div class="history-grid" id="history-container"></div>
+
+    <div class="concept-box">
+        <h3>Mantelroutine &mdash; Job-&Uuml;berwachung</h3>
+        <p>Jeder Nacht-Job definiert selbst, was seine wesentlichen R&uuml;ckmeldungen sind. Die Mantelroutine sammelt diese und erzeugt die Morgen-Statistik.</p>
+        <div class="concept-code">nachtbatch.json Schema:
+{
+  "jobs": [{
+    "name":        "Job-Name (definiert vom Job selbst)",
+    "time":        "Uhrzeit (HH:MM)",
+    "status":      "success | error | skipped",
+    "duration_sec": 45,
+    "summary":     "Einzeiler (vom Job definiert)",
+    "details":     ["Wesentliche R\u00fcckmeldung 1", "..."]
+  }],
+  "pending_actions": ["Offene manuelle Schritte"],
+  "history": [{"date", "status", "jobs_ok", "jobs_total"}]
+}</div>
+    </div>
+
+    <div class="footer">AI Artifakte &mdash; Morgenroutine | <a href="https://github.com/dna-dieter/morgenroutine">GitHub</a></div>
+
+    <script>
+    async function loadJSON(file) {
+        try {
+            const resp = await fetch('./data/' + file + '.json?t=' + Date.now());
+            if (!resp.ok) throw new Error(resp.status);
+            return await resp.json();
+        } catch (e) { console.warn('Fehler:', e); return null; }
+    }
+
+    function renderOverall(data) {
+        const dot = document.getElementById('overall-dot');
+        const text = document.getElementById('overall-text');
+        const time = document.getElementById('overall-time');
+        if (!data) { dot.className = 'status-dot'; text.textContent = 'Keine Daten'; return; }
+        dot.className = 'status-dot ' + data.overall_status;
+        const labels = { success: 'Alle Jobs erfolgreich', error: 'Fehler aufgetreten', partial: 'Teilweise erfolgreich' };
+        text.textContent = labels[data.overall_status] || data.overall_status;
+        time.textContent = data.date + ' \u00b7 Letztes Update: ' + new Date(data.timestamp).toLocaleTimeString('de-DE');
+    }
+
+    function renderJobs(data) {
+        const c = document.getElementById('jobs-container');
+        if (!data || !data.jobs) { c.innerHTML = '<p style="color:var(--text-muted)">Keine Job-Daten</p>'; return; }
+        c.innerHTML = data.jobs.map(j => '<div class="job-card"><div class="job-header"><span class="job-name">' + j.name + '</span><div style="display:flex;align-items:center;gap:12px;"><div class="job-meta"><span>' + j.time + ' Uhr</span><span>' + j.duration_sec + 's</span></div><span class="job-badge ' + j.status + '">' + (j.status === 'success' ? 'Erfolgreich' : 'Fehler') + '</span></div></div><div class="job-summary">' + j.summary + '</div><ul class="job-details">' + j.details.map(function(d) { return '<li>' + d + '</li>'; }).join('') + '</ul></div>').join('');
+    }
+
+    function renderPending(data) {
+        const c = document.getElementById('pending-container');
+        if (!data || !data.pending_actions || !data.pending_actions.length) { c.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Keine offenen Aktionen</p>'; return; }
+        c.innerHTML = data.pending_actions.map(function(a) { return '<div class="pending-item"><span class="pending-icon">\u23f3</span> ' + a + '</div>'; }).join('');
+    }
+
+    function renderHistory(data) {
+        const c = document.getElementById('history-container');
+        if (!data || !data.history) return;
+        c.innerHTML = data.history.map(function(h) {
+            var emoji = h.status === 'success' ? '\ud83d\udfe2' : h.status === 'partial' ? '\ud83d\udfe1' : '\ud83d\udd34';
+            return '<div class="history-day"><div class="h-date">' + h.date + '</div><div class="h-status">' + emoji + '</div><div class="h-detail">' + h.jobs_ok + '/' + h.jobs_total + ' OK' + (h.note ? '<br>' + h.note : '') + '</div></div>';
+        }).join('');
+    }
+
+    async function init() {
+        var data = await loadJSON('nachtbatch');
+        renderOverall(data);
+        renderJobs(data);
+        renderPending(data);
+        renderHistory(data);
+    }
+    init();
+    </script>
+</body>
+</html>
