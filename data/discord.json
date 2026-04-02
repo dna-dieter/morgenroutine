@@ -1,23 +1,5 @@
 {
-  "timestamp": "2026-04-02T06:00:00Z",
-  "messages": [
-    {
-      "author": "Olli",
-      "text": "Relief Rally nach Iran-Deeskalation. Kein struktureller Trendwechsel! Vorsicht bei Neueinstiegen — wir sind noch in Transition.",
-      "channel": "#marktanalyse",
-      "time": "01.04.2026 22:15"
-    },
-    {
-      "author": "Christian",
-      "text": "FSLY sieht gut aus — Undercut am 50-MA mit steigendem Volumen. Pivot bei $19.20 beobachten.",
-      "channel": "#setups-long",
-      "time": "01.04.2026 21:40"
-    },
-    {
-      "author": "Olli",
-      "text": "Storage-Sektor weiter stark: SNDK, WDC, MU. Das sind die aktuellen Leader — solange RS hält, dabeibleiben.",
-      "channel": "#livetrading",
-      "time": "01.04.2026 20:55"
-    }
-  ]
+  "date": "2026-04-02",
+  "timestamp": "2026-04-02T05:00:00",
+  "messages": []
 }

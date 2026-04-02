@@ -22,11 +22,96 @@ async function loadJSON(file) {
     }
 }
 
+/* ====== SCHEDULE ====== */
+function renderSchedule(data) {
+    var banner = document.getElementById('schedule-banner');
+    var dot = document.getElementById('schedule-dot');
+    var msg = document.getElementById('schedule-msg');
+    var meta = document.getElementById('schedule-meta');
+    var jobsDiv = document.getElementById('schedule-jobs');
+    var timeInput = document.getElementById('startzeit-input');
+
+    if (!data) {
+        dot.className = 'schedule-dot empty';
+        msg.textContent = 'Keine Daten';
+        msg.className = 'schedule-msg is-empty';
+        banner.className = 'schedule-banner status-empty';
+        jobsDiv.innerHTML = '<div class="schedule-empty-msg">Kein Eintrag im Schedule</div>';
+        return;
+    }
+
+    var status = data.overall_status || 'empty';
+    banner.className = 'schedule-banner status-' + status;
+    dot.className = 'schedule-dot ' + status;
+
+    // Startzeit setzen
+    if (data.startzeit) timeInput.value = data.startzeit;
+
+    // Leerer Schedule
+    if (data.schedule_empty || status === 'empty') {
+        msg.textContent = data.message || 'Kein Eintrag im Schedule';
+        msg.className = 'schedule-msg is-empty';
+        jobsDiv.innerHTML = '<div class="schedule-empty-msg">Kein Eintrag im Schedule &mdash; Jobs in schedule.toml konfigurieren</div>';
+        if (data.startzeit_actual && data.startzeit_actual !== '--:--') {
+            meta.textContent = 'Letzter Lauf: ' + data.startzeit_actual + ' (' + data.date + ')';
+        } else {
+            meta.textContent = 'Noch nicht gelaufen';
+        }
+        return;
+    }
+
+    // Jobs vorhanden
+    var ok = data.jobs_success || 0;
+    var fail = data.jobs_error || 0;
+    var skip = data.jobs_skipped || 0;
+    var total = data.jobs_total || 0;
+
+    if (status === 'success') {
+        msg.textContent = total + ' Jobs erfolgreich (' + data.duration_total_sec + 's)';
+        msg.className = 'schedule-msg';
+    } else if (status === 'partial') {
+        msg.textContent = fail + '/' + total + ' fehlgeschlagen';
+        msg.className = 'schedule-msg is-empty';
+    } else {
+        msg.textContent = 'Alle ' + total + ' Jobs fehlgeschlagen';
+        msg.className = 'schedule-msg is-empty';
+    }
+
+    meta.textContent = 'Lauf: ' + (data.startzeit_actual || '--:--') + ' (' + data.date + ') | ' + data.duration_total_sec + 's';
+
+    // Job-Liste rendern
+    if (data.jobs && data.jobs.length > 0) {
+        jobsDiv.className = 'schedule-jobs';
+        jobsDiv.innerHTML = data.jobs.map(function(j) {
+            var dotCls = j.status || 'pending';
+            return '<div class="schedule-job-item">' +
+                '<span class="sj-dot ' + dotCls + '"></span>' +
+                '<span class="sj-name">' + j.name + '</span>' +
+                '<span class="sj-desc">' + (j.beschreibung || '') + '</span>' +
+                '<span class="sj-msg">' + (j.message || '') + '</span>' +
+                '<span class="sj-time">' + (j.duration_sec || 0) + 's</span>' +
+                '</div>';
+        }).join('') +
+        '<div class="schedule-summary">' +
+            '<span class="ok">' + ok + ' OK</span>' +
+            '<span class="fail">' + fail + ' Fehler</span>' +
+            '<span class="skip">' + skip + ' Skipt</span>' +
+        '</div>';
+    } else {
+        jobsDiv.innerHTML = '<div class="schedule-empty-msg">Kein Eintrag im Schedule</div>';
+    }
+}
+
+/* ====== NACHTBATCH ====== */
 function renderNachtbatch(data) {
     var dot = document.getElementById('nb-dot');
     var summary = document.getElementById('nb-summary');
     var jobs = document.getElementById('nb-jobs');
-    if (!data || !data.jobs) { dot.className = 'nb-dot unknown'; summary.textContent = 'Keine Daten'; return; }
+    if (!data || !data.jobs || !data.jobs.length) {
+        dot.className = 'nb-dot unknown';
+        summary.textContent = 'Keine Daten';
+        return;
+    }
     var allOk = data.jobs.every(function(j) { return j.status === 'success'; });
     var anyFail = data.jobs.some(function(j) { return j.status === 'error'; });
     if (allOk) {
@@ -41,12 +126,13 @@ function renderNachtbatch(data) {
         summary.textContent = 'Teilweise erfolgreich';
     }
     jobs.innerHTML = data.jobs.map(function(j) {
-        var icon = j.status === 'success' ? 'ok' : j.status === 'error' ? 'fail' : 'skip';
         var symbol = j.status === 'success' ? '\u25cf' : j.status === 'error' ? '\u2715' : '\u25cb';
-        return '<div class="nb-job"><span class="nb-job-icon ' + icon + '">' + symbol + '</span> ' + j.name + ' (' + j.time + ')</div>';
+        var cls = j.status === 'success' ? 'ok' : j.status === 'error' ? 'fail' : 'skip';
+        return '<div class="nb-job"><span class="nb-job-icon ' + cls + '">' + symbol + '</span> ' + j.name + ' (' + (j.time || '') + ')</div>';
     }).join('');
 }
 
+/* ====== AMPEL ====== */
 function renderAmpel(data) {
     if (!data) return;
     var dot = document.getElementById('ampel-dot');
@@ -56,28 +142,32 @@ function renderAmpel(data) {
     var labels = { gruen: 'GR\u00dcN \u2014 Volle Positionsgr\u00f6\u00dfe', gelb: 'GELB \u2014 Reduzierte Gr\u00f6\u00dfe', rot: 'ROT \u2014 Kein Neueinstieg' };
     dot.className = 'ampel-dot ' + (colors[data.signal] || 'yellow');
     text.textContent = labels[data.signal] || data.signal;
-    details.innerHTML = '<span>VIX-Regime: <strong>' + (data.vix_regime || '\u2014') + '</strong></span><span>Positionsgr\u00f6\u00dfe: <strong>' + (data.position_size || '\u2014') + '</strong></span><span>Marktphase: <strong>' + (data.market_phase || '\u2014') + '</strong></span>';
+    details.innerHTML = '<span>VIX: <strong>' + (data.vix_value || '\u2014') + '</strong></span><span>Regime: <strong>' + (data.vix_regime || '\u2014') + '</strong></span><span>Position: <strong>' + (data.position_size || '\u2014') + '</strong></span><span>Phase: <strong>' + (data.market_phase || '\u2014') + '</strong></span>';
 }
 
+/* ====== MARKT ====== */
 function renderMarket(data) {
     var grid = document.getElementById('market-grid');
-    if (!data || !data.indices) { grid.innerHTML = '<div class="no-data">Keine Marktdaten</div>'; return; }
+    if (!data || !data.indices || !data.indices.length) { grid.innerHTML = '<div class="no-data">Keine Marktdaten</div>'; return; }
     grid.innerHTML = data.indices.map(function(idx) {
-        return '<div class="market-item"><div class="ticker">' + idx.name + '</div><div class="price">' + idx.price + '</div><div class="change ' + pctClass(idx.change_pct) + '">' + pctSign(idx.change_pct) + idx.change_pct + '%</div><div class="label">' + (idx.label || '') + '</div></div>';
+        return '<div class="market-item"><div class="ticker">' + idx.ticker + '</div><div class="price">' + idx.price + '</div><div class="change ' + pctClass(idx.change_pct) + '">' + pctSign(idx.change_pct) + idx.change_pct + '%</div><div class="label">' + (idx.label || '') + '</div></div>';
     }).join('');
     var badge = document.getElementById('market-phase-badge');
     if (data.weinstein_phase) { badge.textContent = 'Phase ' + data.weinstein_phase; badge.className = 'card-badge phase-' + data.weinstein_phase; }
 }
 
+/* ====== BREADTH ====== */
 function renderBreadth(data) {
     var c = document.getElementById('breadth-container');
-    if (!data || !data.indicators) { c.innerHTML = '<div class="no-data">Keine Breadth-Daten</div>'; return; }
+    if (!data || !data.indicators || !data.indicators.length) { c.innerHTML = '<div class="no-data">Keine Breadth-Daten</div>'; return; }
     c.innerHTML = data.indicators.map(function(ind) {
-        var color = ind.value >= 60 ? 'var(--accent-green)' : ind.value >= 40 ? 'var(--accent-yellow)' : 'var(--accent-red)';
-        return '<div class="breadth-item"><div class="breadth-label"><span style="color:var(--text-secondary)">' + ind.name + '</span><span style="color:' + color + ';font-weight:600">' + ind.value + '%</span></div><div class="breadth-bar"><div class="breadth-fill" style="width:' + ind.value + '%;background:' + color + '"></div></div></div>';
+        var pct = ind.pct || ind.value || 0;
+        var color = pct >= 60 ? 'var(--accent-green)' : pct >= 40 ? 'var(--accent-yellow)' : 'var(--accent-red)';
+        return '<div class="breadth-item"><div class="breadth-label"><span style="color:var(--text-secondary)">' + ind.name + '</span><span style="color:' + color + ';font-weight:600">' + pct + '%</span></div><div class="breadth-bar"><div class="breadth-fill" style="width:' + pct + '%;background:' + color + '"></div></div></div>';
     }).join('');
 }
 
+/* ====== WATCHLIST ====== */
 function renderWatchlist(data) {
     var c = document.getElementById('watchlist-container');
     var count = document.getElementById('watchlist-count');
@@ -88,6 +178,7 @@ function renderWatchlist(data) {
     }).join('') + '</tbody></table>';
 }
 
+/* ====== SETUPS ====== */
 function renderSetups(data) {
     var c = document.getElementById('setups-container');
     var count = document.getElementById('setup-count');
@@ -98,6 +189,7 @@ function renderSetups(data) {
     }).join('');
 }
 
+/* ====== POSITIONEN ====== */
 function renderPositions(data) {
     var c = document.getElementById('positions-container');
     var badge = document.getElementById('positions-pnl-badge');
@@ -110,6 +202,7 @@ function renderPositions(data) {
     }).join('') + '</tbody></table>';
 }
 
+/* ====== DISCORD ====== */
 function renderDiscord(data) {
     var c = document.getElementById('discord-container');
     var count = document.getElementById('discord-msg-count');
@@ -120,6 +213,7 @@ function renderDiscord(data) {
     }).join('');
 }
 
+/* ====== KALENDER ====== */
 function renderCalendar(data) {
     var c = document.getElementById('calendar-container');
     if (!data || !data.events || !data.events.length) { c.innerHTML = '<div class="no-data">Keine Termine</div>'; return; }
@@ -137,21 +231,24 @@ function toggleCheck(el) {
     el.classList.toggle('checked', cb.checked);
 }
 
+/* ====== INIT ====== */
 async function init() {
     var results = await Promise.all([
+        loadJSON('schedule_result'),
         loadJSON('market'), loadJSON('breadth'), loadJSON('watchlist'), loadJSON('setups'),
         loadJSON('positions'), loadJSON('discord'), loadJSON('calendar'), loadJSON('ampel'), loadJSON('nachtbatch')
     ]);
-    renderNachtbatch(results[8]);
-    renderAmpel(results[7]);
-    renderMarket(results[0]);
-    renderBreadth(results[1]);
-    renderWatchlist(results[2]);
-    renderSetups(results[3]);
-    renderPositions(results[4]);
-    renderDiscord(results[5]);
-    renderCalendar(results[6]);
-    var ts = (results[0] && results[0].timestamp) || (results[7] && results[7].timestamp) || new Date().toISOString();
+    renderSchedule(results[0]);
+    renderNachtbatch(results[9]);
+    renderAmpel(results[8]);
+    renderMarket(results[1]);
+    renderBreadth(results[2]);
+    renderWatchlist(results[3]);
+    renderSetups(results[4]);
+    renderPositions(results[5]);
+    renderDiscord(results[6]);
+    renderCalendar(results[7]);
+    var ts = (results[0] && results[0].timestamp) || (results[1] && results[1].timestamp) || new Date().toISOString();
     document.getElementById('data-timestamp').textContent = new Date(ts).toLocaleString('de-DE');
 }
 

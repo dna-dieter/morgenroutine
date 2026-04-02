@@ -1,41 +1,8 @@
 {
-  "timestamp": "2026-04-02T04:30:00Z",
   "date": "2026-04-02",
-  "overall_status": "success",
-  "jobs": [
-    {
-      "name": "Vault-Housekeeping",
-      "time": "03:00",
-      "status": "success",
-      "duration_sec": 45,
-      "summary": "Skill-Konsistenz verifiziert: 15 Skills synced",
-      "details": [
-        "15 Skills in GitHub = Vault = Overview = CLAUDE.md",
-        "Wiki-Link-Prüfung: keine verwaisten Links",
-        "feiertag-discord-experte pushed (Commit 5369a96)"
-      ]
-    },
-    {
-      "name": "SEC-Delta-Update",
-      "time": "04:00",
-      "status": "success",
-      "duration_sec": 312,
-      "summary": "SEC EDGAR Delta-Update erfolgreich",
-      "details": [
-        "companyfacts aktualisiert",
-        "Neue Filings: 47 seit letztem Update",
-        "Datenbank: sec_data.db aktuell"
-      ]
-    }
-  ],
-  "pending_actions": [
-    "setup.sh auf beiden Rechnern ausführen",
-    "git-sync MCP Config: meinBrain als Repo hinzufügen",
-    "5 Discord-Kanäle warten auf Export"
-  ],
-  "history": [
-    { "date": "2026-04-02", "status": "success", "jobs_ok": 2, "jobs_total": 2 },
-    { "date": "2026-04-01", "status": "success", "jobs_ok": 2, "jobs_total": 2 },
-    { "date": "2026-03-31", "status": "partial", "jobs_ok": 1, "jobs_total": 2, "note": "SEC-Update: Timeout" }
-  ]
+  "timestamp": "2026-04-02T05:00:00",
+  "overall_status": "empty",
+  "jobs": [],
+  "pending_actions": [],
+  "history": []
 }

@@ -15,6 +15,23 @@
         </div>
     </div>
 
+    <!-- SCHEDULE-BANNER: Erstes Element, zeigt Mantelroutine-Status -->
+    <div class="schedule-banner" id="schedule-banner">
+        <div class="schedule-header">
+            <div class="schedule-status">
+                <span class="schedule-dot" id="schedule-dot"></span>
+                <span class="schedule-title">Mantelroutine</span>
+                <span class="schedule-msg" id="schedule-msg">Lade...</span>
+            </div>
+            <div class="schedule-startzeit">
+                <label for="startzeit-input">Startzeit:</label>
+                <input type="time" id="startzeit-input" class="startzeit-input" value="05:00">
+                <span class="schedule-meta" id="schedule-meta"></span>
+            </div>
+        </div>
+        <div class="schedule-jobs" id="schedule-jobs"></div>
+    </div>
+
     <div class="nachtbatch-banner" id="nachtbatch-banner">
         <div class="nb-status">
             <span class="nb-dot" id="nb-dot"></span>
@@ -111,8 +128,8 @@
     </div>
 
     <div class="footer">
-        <span>AI Artifakte &mdash; Morgenroutine v1.0</span>
-        <span>Daten: Nacht-Batch (JSON) | <a href="https://github.com/dna-dieter/morgenroutine">GitHub Repo</a></span>
+        <span>AI Artifakte &mdash; Morgenroutine v2.0</span>
+        <span>Steuerung: schedule.toml | <a href="https://github.com/dna-dieter/morgenroutine">GitHub Repo</a></span>
     </div>
 
     <script src="app.js"></script>

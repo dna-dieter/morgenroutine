@@ -1,0 +1,15 @@
+{
+  "date": "2026-04-02",
+  "timestamp": "2026-04-02T05:00:00",
+  "startzeit": "05:00",
+  "startzeit_actual": "--:--",
+  "overall_status": "empty",
+  "duration_total_sec": 0,
+  "jobs_total": 0,
+  "jobs_success": 0,
+  "jobs_error": 0,
+  "jobs_skipped": 0,
+  "jobs": [],
+  "schedule_empty": true,
+  "message": "Kein Eintrag im Schedule"
+}

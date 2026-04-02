@@ -1,8 +1,5 @@
 {
-  "timestamp": "2026-04-02T06:00:00Z",
-  "signals": [
-    { "ticker": "FSLY", "type": "Undercut & Rally", "note": "Pivot $19.20 — heute beobachten" },
-    { "ticker": "EOSE", "type": "Maur-Ausbruch", "note": "Vol > 150% Ø — aggressive Entry möglich" },
-    { "ticker": "DOCN", "type": "VCP Trigger", "note": "Enge Spanne — Ausbruch könnte heute kommen" }
-  ]
+  "date": "2026-04-02",
+  "timestamp": "2026-04-02T05:00:00",
+  "signals": []
 }

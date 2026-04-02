@@ -1,14 +1,6 @@
 {
-  "timestamp": "2026-04-02T06:00:00Z",
-  "weinstein_phase": 3,
-  "indices": [
-    { "name": "SPY", "price": "562.38", "change_pct": 1.24, "label": "S&P 500 ETF" },
-    { "name": "QQQ", "price": "478.91", "change_pct": 1.67, "label": "Nasdaq 100 ETF" },
-    { "name": "IWM", "price": "198.45", "change_pct": 0.83, "label": "Russell 2000 ETF" },
-    { "name": "VIX", "price": "22.41", "change_pct": -8.32, "label": "Volatilitätsindex" },
-    { "name": "DXY", "price": "104.12", "change_pct": -0.15, "label": "US Dollar Index" },
-    { "name": "TNX", "price": "4.21", "change_pct": 0.48, "label": "10Y Treasury Yield" },
-    { "name": "GLD", "price": "228.56", "change_pct": -0.34, "label": "Gold ETF" },
-    { "name": "BTC-USD", "price": "84,230", "change_pct": 2.11, "label": "Bitcoin" }
-  ]
+  "date": "2026-04-02",
+  "timestamp": "2026-04-02T05:00:00",
+  "weinstein_phase": 0,
+  "indices": []
 }

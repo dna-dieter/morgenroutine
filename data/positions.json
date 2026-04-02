@@ -1,8 +1,6 @@
 {
-  "timestamp": "2026-04-02T06:00:00Z",
-  "total_pnl": 2.34,
-  "positions": [
-    { "ticker": "SNDK", "entry": "54.20", "current": "56.78", "pnl_pct": 4.76, "stop": "51.80", "setup_type": "Keilausbruch" },
-    { "ticker": "FLNC", "entry": "23.10", "current": "22.45", "pnl_pct": -2.81, "stop": "21.50", "setup_type": "Undercut" }
-  ]
+  "date": "2026-04-02",
+  "timestamp": "2026-04-02T05:00:00",
+  "positions": [],
+  "total_pnl": 0
 }

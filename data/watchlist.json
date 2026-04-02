@@ -1,11 +1,5 @@
 {
-  "timestamp": "2026-04-02T06:00:00Z",
-  "stocks": [
-    { "ticker": "FSLY", "price": "18.92", "change_pct": 3.41, "rs_rating": 87, "setup": "Undercut", "phase": 2, "note": "Pivot bei $19.20, Vol steigend" },
-    { "ticker": "DOCN", "price": "34.56", "change_pct": 2.15, "rs_rating": 82, "setup": "VCP", "phase": 2, "note": "3. Kontraktion, enge Spanne" },
-    { "ticker": "SNDK", "price": "56.78", "change_pct": 1.89, "rs_rating": 91, "setup": "Keilausbruch", "phase": 2, "note": "Storage-Leader, Olli-Fokus" },
-    { "ticker": "MU", "price": "102.34", "change_pct": 1.23, "rs_rating": 78, "setup": "Cup & Handle", "phase": 2, "note": "Handle-Formation bildet sich" },
-    { "ticker": "FLNC", "price": "22.45", "change_pct": -0.67, "rs_rating": 85, "setup": "Undercut", "phase": 2, "note": "Energy-Leader, UC am 50-MA" },
-    { "ticker": "EOSE", "price": "8.91", "change_pct": 4.56, "rs_rating": 79, "setup": "Maur", "phase": 2, "note": "Mauer-Setup, Vol-Sprung" }
-  ]
+  "date": "2026-04-02",
+  "timestamp": "2026-04-02T05:00:00",
+  "stocks": []
 }
