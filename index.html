@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morgenroutine &mdash; Trading Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <h1>&#127749; <span>Morgenroutine</span> &mdash; Trading Dashboard</h1>
+        <div class="header-meta">
+            <div class="date" id="current-date"></div>
+            <div class="update-time">Daten-Update: <span id="data-timestamp">&mdash;</span></div>
+        </div>
+    </div>
+
+    <div class="nachtbatch-banner" id="nachtbatch-banner">
+        <div class="nb-status">
+            <span class="nb-dot" id="nb-dot"></span>
+            <span class="nb-label">Nachtroutinen</span>
+            <span class="nb-summary" id="nb-summary">Lade...</span>
+        </div>
+        <div class="nb-jobs" id="nb-jobs"></div>
+        <a href="nachtbatch.html" class="nb-detail-link">Details &rarr;</a>
+    </div>
+
+    <div class="ampel-bar" id="ampel-bar">
+        <div class="ampel-signal">
+            <span class="ampel-dot" id="ampel-dot"></span>
+            <span id="ampel-text">Lade...</span>
+        </div>
+        <div class="ampel-details" id="ampel-details"></div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card card-wide">
+            <div class="card-header">
+                <span class="card-title">&#128202; Markt-&Uuml;bersicht</span>
+                <span class="card-badge badge-blue" id="market-phase-badge">&mdash;</span>
+            </div>
+            <div class="market-grid" id="market-grid"><div class="no-data">Lade Marktdaten...</div></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">&#128200; Marktbreite</span></div>
+            <div id="breadth-container"><div class="no-data">Lade Breadth-Daten...</div></div>
+        </div>
+
+        <div class="card card-wide">
+            <div class="card-header">
+                <span class="card-title">&#127919; Watchlist</span>
+                <span class="card-badge badge-blue" id="watchlist-count">0 Titel</span>
+            </div>
+            <div id="watchlist-container"><div class="no-data">Lade Watchlist...</div></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">&#9889; Setup-Signale</span>
+                <span class="card-badge badge-purple" id="setup-count">0</span>
+            </div>
+            <div id="setups-container"><div class="no-data">Keine Signale</div></div>
+        </div>
+
+        <div class="card card-wide">
+            <div class="card-header">
+                <span class="card-title">&#128188; Offene Positionen</span>
+                <span class="card-badge" id="positions-pnl-badge">&mdash;</span>
+            </div>
+            <div id="positions-container"><div class="no-data">Keine offenen Positionen</div></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">&#128172; Discord &mdash; Feiertag</span>
+                <span class="card-badge badge-blue" id="discord-msg-count">0 Msgs</span>
+            </div>
+            <div id="discord-container"><div class="no-data">Keine neuen Nachrichten</div></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">&#128197; Kalender &mdash; n&auml;chste 5 Tage</span></div>
+            <div id="calendar-container"><div class="no-data">Keine Termine</div></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">&#9989; Morgen-Checkliste</span></div>
+            <div id="checklist-container">
+                <div class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Marktlage gecheckt (SPY, VIX, Breadth)</span></div>
+                <div class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Watchlist reviewed &mdash; Setups priorisiert</span></div>
+                <div class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Discord gelesen &mdash; Olli &amp; Christian Einsch&auml;tzung</span></div>
+                <div class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Offene Positionen gecheckt &mdash; Stopps OK?</span></div>
+                <div class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Earnings/Events heute? Positionen anpassen?</span></div>
+                <div class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Trading-Ampel beachten &mdash; Positionsgr&ouml;&szlig;e anpassen</span></div>
+                <div class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Tagesplan: Max. Trades &amp; Fokus-Setups festlegen</span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span class="card-title">&#128279; Quick Links</span></div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <a href="https://www.tradingview.com/chart/" target="_blank" style="color:var(--accent-blue);text-decoration:none;font-size:0.85rem;">&#128202; TradingView Charts</a>
+                <a href="https://discord.com/channels/@me" target="_blank" style="color:var(--accent-blue);text-decoration:none;font-size:0.85rem;">&#128172; Discord &mdash; Feiertag Academy</a>
+                <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany" target="_blank" style="color:var(--accent-blue);text-decoration:none;font-size:0.85rem;">&#128203; SEC EDGAR</a>
+                <a href="https://finviz.com/map.ashx" target="_blank" style="color:var(--accent-blue);text-decoration:none;font-size:0.85rem;">&#128506; Finviz Heatmap</a>
+                <a href="https://www.investing.com/economic-calendar/" target="_blank" style="color:var(--accent-blue);text-decoration:none;font-size:0.85rem;">&#128197; Wirtschaftskalender</a>
+                <a href="https://dna-dieter.github.io/ai-artifakte/" target="_blank" style="color:var(--accent-blue);text-decoration:none;font-size:0.85rem;">&#127968; AI Artifakte Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>AI Artifakte &mdash; Morgenroutine v1.0</span>
+        <span>Daten: Nacht-Batch (JSON) | <a href="https://github.com/dna-dieter/morgenroutine">GitHub Repo</a></span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
