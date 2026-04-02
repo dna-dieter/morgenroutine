@@ -1,0 +1,8 @@
+{
+  "signal": "gelb",
+  "vix_regime": "Erhöht (22.4)",
+  "position_size": "50%",
+  "market_phase": "P3 → Transition",
+  "reasoning": "VIX über 20, Marktbreite schwach, keine klare Richtung. Reduzierte Positionsgröße.",
+  "timestamp": "2026-04-02T06:00:00Z"
+}
